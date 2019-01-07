@@ -182,7 +182,7 @@ void _TinyScript::begin(int sz)
   }
 
   addFunc("memfree", tsmemfree);
-  addFunc("digitalRead", tsdigiread);
-  addFunc("digitalWrite", tsdigiwrite);
-  addFunc("pinMode", tspinMode);
+  addFunc("digitalread", tsdigiread);
+  addFunc("digitalwrite", tsdigiwrite);
+  addFunc("pinmode", tspinMode);
 }
