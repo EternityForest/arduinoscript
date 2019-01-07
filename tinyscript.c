@@ -313,7 +313,7 @@ static int islower(int c)
 }
 static int isupper(int c)
 {
-  return (c >= 'A' && c <= 'A');
+  return (c >= 'A' && c <= 'Z');
 }
 static int isalpha(int c)
 {

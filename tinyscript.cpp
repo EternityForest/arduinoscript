@@ -13,6 +13,12 @@ static char dotprompt = 0;
 static char retval = 0;
 static char esc = 0;
 
+int freeRam () {
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
 static void replChar(char c)
 {
     int r;
@@ -116,6 +122,11 @@ void _TinyScript::addFunc(const char *name, Val (*Cfunc)())
   TinyScript_Define(name, CFUNC(0), (intptr_t)Cfunc);
 }
 
+void addIntVar(const char *name, int x){
+      TinyScript_Define(name, INT, x);
+}
+
+
 
 
 // compute a function of two variables
@@ -146,7 +157,7 @@ static Val tsdigiread(Val x)
 // used for testing scripts
 static Val tsmemfree()
 {
-  return 0;
+  return freeRam();
   //return ESP.getFreeHeap();
 }
 
@@ -182,7 +193,14 @@ void _TinyScript::begin(int sz)
   }
 
   addFunc("memfree", tsmemfree);
-  addFunc("digitalread", tsdigiread);
-  addFunc("digitalwrite", tsdigiwrite);
-  addFunc("pinmode", tspinMode);
+  addFunc("digitalRead", tsdigiread);
+  addFunc("digitalWrite", tsdigiwrite);
+  addFunc("pinMode", tspinMode);
+  addIntVar("HIGH",HIGH);
+  addIntVar("LOW",LOW);
+  addIntVar("INPUT",INPUT);
+  addIntVar("OUTPUT", OUTPUT);
+  addIntVar("INPUT_PULLUP", INPUT_PULLUP);
+
+    
 }
