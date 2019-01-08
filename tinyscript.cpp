@@ -103,29 +103,37 @@ void _TinyScript::pollREPL()
     replChar(x);
   }
 }
+
+void hdeferr(int x)
+{
+  if(x!=TS_ERR_OK)
+  {
+    Serial.println(F("Could not define sym. Out of mem?"));
+  }
+}
 void _TinyScript::addFunc(const char *name,  Val (*Cfunc)(Val, Val, Val, Val))
 {
-  TinyScript_Define(name, CFUNC(4), (intptr_t)Cfunc);
+  hdeferr(TinyScript_Define(name, CFUNC(4), (intptr_t)Cfunc));
 }
 void _TinyScript::addFunc(const char *name,  Val (*Cfunc)(Val, Val, Val))
 {
-  TinyScript_Define(name, CFUNC(3), (intptr_t)Cfunc);
+  hdeferr(TinyScript_Define(name, CFUNC(3), (intptr_t)Cfunc));
 }
 void _TinyScript::addFunc(const char *name,  Val (*Cfunc)(Val, Val))
 {
-  TinyScript_Define(name, CFUNC(2), (intptr_t)Cfunc);
+  hdeferr(TinyScript_Define(name, CFUNC(2), (intptr_t)Cfunc));
 }
 void _TinyScript::addFunc(const char *name, Val (*Cfunc)(Val))
 {
-  TinyScript_Define(name, CFUNC(1), (intptr_t)Cfunc);
+  hdeferr(TinyScript_Define(name, CFUNC(1), (intptr_t)Cfunc));
 }
 void _TinyScript::addFunc(const char *name, Val (*Cfunc)())
 {
-  TinyScript_Define(name, CFUNC(0), (intptr_t)Cfunc);
+  hdeferr(TinyScript_Define(name, CFUNC(0), (intptr_t)Cfunc));
 }
 
 void _TinyScript::addIntVar(const char *name, int x){
-      TinyScript_Define(name, INT, x);
+      hdeferr(TinyScript_Define(name, INT, x));
 }
 
 /*void _TinyScript::getIntVar(const char *name, int x){
@@ -169,8 +177,7 @@ static Val tsmillis()
 
 static Val tsmemfree()
 {
-  return freeRam();
-  //return ESP.getFreeHeap();
+ return TinyScript_memfree();
 }
 
 

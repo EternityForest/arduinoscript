@@ -125,7 +125,7 @@ typedef struct ufunc {
 int TinyScript_Init(void *mem, int mem_size);
 int TinyScript_Define(const char *name, int toktype, Val value);
 int TinyScript_Run(const char *s, int saveStrings, int topLevel);
-
+int TinyScript_memfree();
 // provided by our caller
 extern int inchar(void);
 extern void outchar(int c);

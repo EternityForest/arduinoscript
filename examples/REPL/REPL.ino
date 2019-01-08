@@ -17,8 +17,8 @@ void setup() {
   // put your setup code here, to run once:
 
   Serial.begin(115200);
-  //Give the interpreter 8192 bytes
-  TinyScript.begin(512);
+  //Give the interpreter 768 bytes
+  TinyScript.begin(768);
   TinyScript.addFunc("test", testfunc);
 }
 

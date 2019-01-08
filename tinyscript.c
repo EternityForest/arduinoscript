@@ -1175,3 +1175,8 @@ TinyScript_Run(const char *buf, int saveStrings, int topLevel)
     instructionsremaining = instructionlimit;
   return ParseString(Cstring(buf), saveStrings, topLevel);
 }
+
+int TinyScript_memfree()
+{
+  return ((uint8_t *)valptr - (uint8_t *)symptr);
+}
