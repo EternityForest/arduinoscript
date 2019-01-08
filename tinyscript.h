@@ -50,6 +50,7 @@ enum {
     TS_ERR_UNKNOWN_SYM = -3,
     TS_ERR_BADARGS = -4,
     TS_ERR_TOOMANYARGS = -5,
+    TS_ERR_LIMIT =-6,
     TS_ERR_OK_ELSE = 1, // special internal condition
 };
 
@@ -75,7 +76,7 @@ typedef struct {
 } TS_String;
 
 // val has to be able to hold a pointer
-typedef intptr_t Val;
+typedef int64_t Val;
 
 static inline unsigned StringGetLen(TS_String s) { return (unsigned)s.len_; }
 static inline const char *StringGetPtr(TS_String s) { return (const char *)(intptr_t)s.ptr_; }
@@ -143,6 +144,9 @@ static void addFunc(const char *name, Val (*Cfunc)(Val, Val, Val));
 static void addFunc(const char *name, Val (*Cfunc)(Val, Val));
 static void addFunc(const char *name, Val (*Cfunc)(Val));
 static void addFunc(const char *name, Val (*Cfunc)());
+static void addIntVar(const char *name, int x);
+//static int getIntVar(String name);
+
 
 static void begin(int size);
 };

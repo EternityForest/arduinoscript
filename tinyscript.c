@@ -45,6 +45,7 @@
 #include <stdlib.h>
 #include "tinyscript.h"
 
+#define INT_TYPE int64_t
 // where our data is stored
 // value stack grows from the top of the area to the bottom
 // symbol stack grows from the bottom up
@@ -65,6 +66,10 @@ static int tokenArgs; // number of arguments for this token
 static TS_String token;  // the actual string representing the token
 static Val tokenVal;  // for symbolic tokens, the symbol's value
 static Sym *tokenSym;
+
+//For limiting how many instructions run before it raises an error.
+int instructionlimit = 250000;
+int instructionsremaining =0;
 
 // compare two Strings for equality
 Val stringeq(TS_String ai, TS_String bi)
@@ -114,7 +119,7 @@ Newline(void)
 static void
 PrintNumber(Val v)
 {
-  unsigned long x;
+  INT_TYPE x;
   unsigned base = 10;
   int prec = 1;
   int digits = 0;
@@ -956,6 +961,21 @@ ParseStmt(int saveStrings)
 
   c = curToken;
 
+
+  //Time limit so we don't endless loop.  
+  instructionsremaining--;
+  if(instructionsremaining==0)
+  {
+      if(instructionlimit)
+      {
+          return TS_ERR_LIMIT;
+      }
+      else
+      {
+          instructionsremaining=9999;
+      }
+  }
+
   if (c == TOK_VARDEF) {
     // a definition var a=x
     c = NextRawToken(); // we want to get VAR_SYMBOL directly
@@ -1020,6 +1040,8 @@ ParseString(TS_String str, int saveStrings, int topLevel)
 
   parseptr = str;
   for (;;) {
+   
+    
     c = NextToken();
     while (c == '\n' || c == ';') {
       c = NextToken();
@@ -1142,8 +1164,14 @@ TinyScript_Init(void *mem, int mem_size)
   return TS_ERR_OK;
 }
 
+void TinyScript_setInstructionLimit(int x)
+{
+    instructionlimit = x;
+}
+
 int
 TinyScript_Run(const char *buf, int saveStrings, int topLevel)
 {
+    instructionsremaining = instructionlimit;
   return ParseString(Cstring(buf), saveStrings, topLevel);
 }

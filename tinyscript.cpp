@@ -19,6 +19,8 @@ int freeRam () {
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
+
+
 static void replChar(char c)
 {
     int r;
@@ -122,11 +124,12 @@ void _TinyScript::addFunc(const char *name, Val (*Cfunc)())
   TinyScript_Define(name, CFUNC(0), (intptr_t)Cfunc);
 }
 
-void addIntVar(const char *name, int x){
+void _TinyScript::addIntVar(const char *name, int x){
       TinyScript_Define(name, INT, x);
 }
 
-
+/*void _TinyScript::getIntVar(const char *name, int x){
+}*/
 
 
 // compute a function of two variables
@@ -137,24 +140,33 @@ static Val tspinMode(Val x, Val y)
   return 0;
 }
 
-// compute a function of two variables
-// used for testing scripts
+
 static Val tsdigiwrite(Val x, Val y)
 {
   digitalWrite(x, y);
   return 0;
 }
 
-// compute a function of two variables
-// used for testing scripts
+
 static Val tsdigiread(Val x)
 {
   return digitalRead(x);
 }
 
 
-// compute a function of two variables
-// used for testing scripts
+
+static Val tsdelay(Val x)
+{
+  delay(x);
+  return 0;
+}
+
+static Val tsmillis()
+{
+  return millis();
+}
+
+
 static Val tsmemfree()
 {
   return freeRam();
@@ -196,6 +208,9 @@ void _TinyScript::begin(int sz)
   addFunc("digitalRead", tsdigiread);
   addFunc("digitalWrite", tsdigiwrite);
   addFunc("pinMode", tspinMode);
+  addFunc("delay", tsdelay);
+  addFunc("millis", tsmillis);
+
   addIntVar("HIGH",HIGH);
   addIntVar("LOW",LOW);
   addIntVar("INPUT",INPUT);
